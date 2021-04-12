@@ -88,6 +88,22 @@ def mapping():
 
     return render_template("search_for_nearest_hospital.html")
 
+
+@app.route("/direction/<loc_1>/<loc_2>",methods=["GET"])
+def direction(loc_1, loc_2):
+    # do some awesome shit
+    print('in directions')
+    print(loc_1)
+    print(loc_2)
+    url = "http://router.project-osrm.org/route/v1/driving/{};{}?steps=true".format(loc_1, loc_2)
+    print(url)
+    response = requests.get(url)
+    print(response.json())
+    return jsonify(response.json())
+
+
+
+
 @socketio.on("read_data")
 def read_json_data():
     hospitals_clinics_res = requests.get("https://data.calgary.ca/resource/x34e-bcjz.geojson",\

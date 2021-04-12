@@ -127,7 +127,7 @@ function open_review(hospital_clinic_code){
   location.href=Flask.url_for('hospital_clinic_details', {code:hospital_clinic_code})
 }
 
-function pathToNearest(){
+const pathToNearest = async () => {
     console.log("get path to nearest hospital");
     let loc=userMarekerLayer.getLatLng();
     console.log("loc:");
@@ -160,6 +160,42 @@ function pathToNearest(){
           return L.circleMarker(latlng, geojsonMarkerOptions);
       }
   }).addTo(map);
+
+  const data = getPathToBetweenLocations(userMarekerGeojsonFeature, nearestHospital, function(response) {
+    console.log("after asfasdf");
+    console.log(response);
+//    response.matchings.map((m) => L.polyline(polyline.decode(m.geometry)).addTo(map));
+    let pointsList = [];
+    for (let i = 0;i < response.routes[0].legs[0].steps.length;i++) {
+        pointsList.push(new L.LatLng(response.routes[0].legs[0].steps[i].maneuver.location[1], response.routes[0].legs[0].steps[i].maneuver.location[0]))
+    }
+    console.log(pointsList);
+    var firstpolyline = new L.polyline(pointsList, {
+        color: 'red',
+        weight: 3,
+        opacity: 0.5,
+        smoothFactor: 1
+
+        });
+    firstpolyline.addTo(map);
+  });
+
+
+
+}
+
+const getPathToBetweenLocations = (loc_1, loc_2, callback) => {
+const url =  "/direction/" + loc_1.geometry.coordinates[0] + ',' + loc_1.geometry.coordinates[1] + '/' +  loc_2.geometry.coordinates[0] + ',' + loc_2.geometry.coordinates[1];
+    $.ajax({
+      url: "/direction/" + loc_1.geometry.coordinates[0] + ',' + loc_1.geometry.coordinates[1] + '/' +  loc_2.geometry.coordinates[0] + ',' + loc_2.geometry.coordinates[1] ,
+      method: 'GET'
+    }).done(function(data) {
+      console.log('request recieved');
+      console.log(data);
+      callback(data)
+      return data
+    });
+
 }
 
 function pathToSelected(){
