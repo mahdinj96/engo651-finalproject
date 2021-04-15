@@ -162,6 +162,12 @@ const pathToNearest = async () => {
   }).addTo(map);
 
   const data = getPathToBetweenLocations(userMarekerGeojsonFeature, nearestHospital, function(response) {
+    console.log("this is nearestHospital:")
+    console.log(nearestHospital)
+
+    console.log("this is userMareker")
+    console.log(userMarekerGeojsonFeature)
+
     console.log("after asfasdf");
     console.log(response);
 //    response.matchings.map((m) => L.polyline(polyline.decode(m.geometry)).addTo(map));
@@ -204,6 +210,66 @@ function pathToSelected(){
     alert("No circle is selected");
     return false;
   }
+
+    let loc_1=userMarekerLayer.getLatLng();
+    console.log("loc_1:");
+    console.log(loc_1);
+    var userMarekerGeojsonFeature = {
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": [loc_1.lng,loc_1.lat]
+      }
+  };
+
+console.log('this is the selected geojson')
+console.log(selectedCircleGeojson);
+
+//const getPathToBetweenLocations = (loc_1, loc_2, callback) => {
+//const url =  "/direction/" + loc_1.geometry.coordinates[0] + ',' + loc_1.geometry.coordinates[1] + '/' +  loc_2.latlng[0] + ',' + loc_2.latlng[1];
+//    $.ajax({
+//      url: "/direction/" + loc_1.geometry.coordinates[0] + ',' + loc_1.geometry.coordinates[1] + '/' +  loc_2.latlng[0] + ',' + loc_2.latlng[1] ,
+//      method: 'GET'
+//    }).done(function(data) {
+//      console.log('request recieved');
+//      console.log(data);
+//      callback(data)
+//      return data
+//    });
+//
+//}
+
+    let loc_2=selectedCircle.getLatLng();
+    console.log("loc_1:");
+    console.log(loc_1);
+    var selectedCircleGeojson = {
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": [loc_2.lng,loc_2.lat]
+      }
+    };
+
+
+  const data = getPathToBetweenLocations(userMarekerGeojsonFeature, selectedCircleGeojson, function(response) {
+    console.log("after asfasdf");
+    console.log(response);
+//    response.matchings.map((m) => L.polyline(polyline.decode(m.geometry)).addTo(map));
+    let pointsList = [];
+    for (let i = 0;i < response.routes[0].legs[0].steps.length;i++) {
+        pointsList.push(new L.LatLng(response.routes[0].legs[0].steps[i].maneuver.location[1], response.routes[0].legs[0].steps[i].maneuver.location[0]))
+    }
+    console.log(pointsList);
+    var firstpolyline = new L.polyline(pointsList, {
+        color: 'red',
+        weight: 3,
+        opacity: 0.5,
+        smoothFactor: 1
+
+        });
+    firstpolyline.addTo(map);
+  });
+
 }
 function removeSelected(){
   if(map.hasLayer(selectedCircle)){

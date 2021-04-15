@@ -91,7 +91,6 @@ def mapping():
 
 @app.route("/direction/<loc_1>/<loc_2>",methods=["GET"])
 def direction(loc_1, loc_2):
-    # do some awesome shit
     print('in directions')
     print(loc_1)
     print(loc_2)
