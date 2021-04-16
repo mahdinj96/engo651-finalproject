@@ -94,7 +94,7 @@ def direction(loc_1, loc_2):
     print('in directions')
     print(loc_1)
     print(loc_2)
-    url = "http://router.project-osrm.org/route/v1/driving/{};{}?steps=true".format(loc_1, loc_2)
+    url = "http://router.project-osrm.org/route/v1/driving/{};{}?overview=full&steps=true&alternatives=3".format(loc_1, loc_2)
     print(url)
     response = requests.get(url)
     print(response.json())
