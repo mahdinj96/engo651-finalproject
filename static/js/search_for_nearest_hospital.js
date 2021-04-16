@@ -170,17 +170,24 @@ const pathToNearest = async () => {
 
     console.log("Response is:");
     console.log(response);
-//    response.matchings.map((m) => L.polyline(polyline.decode(m.geometry)).addTo(map));
-    let pointsList = [];
-//    for (let n=0;n < response)
-    for (let i = 0;i < response.routes[0].legs[0].steps.length;i++) {
-//        for (let j = 0; j<response.routes[0].legs[0].steps[i].intersections.length;j++) {
-//                    pointsList.push(new L.LatLng(response.routes[0].legs[0].steps[i].maneuver.location[1], response.routes[0].legs[0].steps[i].maneuver.location[0]))
-//        }
-    var polyline = L.Polyline.fromEncoded(response.routes[0].legs[0].steps[i].geometry)
-        console.log(polyline)
-        polyline.addTo(map)
+
+        for (let j = 0;j < response.routes.length;j++) {
+            for (let i = 0;i < response.routes[j].legs[0].steps.length;i++) {
+                var polyline = L.Polyline.fromEncoded(response.routes[j].legs[0].steps[i].geometry)
+                console.log(polyline)
+                if (j==0){polyline.setStyle({
+                color: 'red'
+                });
+
+                }else{polyline.setStyle({
+                color: 'grey'
+                });
+                }
+
+                polyline.addTo(map)
     }
+
+        }
   });
 
 }
@@ -232,23 +239,36 @@ function pathToSelected(){
 
 
   const data = getPathToBetweenLocations(userMarekerGeojsonFeature, selectedCircleGeojson, function(response) {
-    console.log("Response for selected is:");
-    console.log(response);
-//    response.matchings.map((m) => L.polyline(polyline.decode(m.geometry)).addTo(map));
-    let pointsList = [];
-    for (let i = 0;i < response.routes[0].legs[0].steps.length;i++) {
-        pointsList.push(new L.LatLng(response.routes[0].legs[0].steps[i].maneuver.location[1], response.routes[0].legs[0].steps[i].maneuver.location[0]))
-    }
-    console.log(pointsList);
-    var firstpolyline = new L.polyline(pointsList, {
-        color: 'red',
-        weight: 3,
-        opacity: 0.5,
-        smoothFactor: 1
+    console.log("this is nearestHospital:")
+    console.log(selectedCircleGeojson)
 
-        });
-    firstpolyline.addTo(map);
+    console.log("this is userMareker")
+    console.log(userMarekerGeojsonFeature)
+
+    console.log("Response is:");
+    console.log(response);
+
+        for (let j = 0;j < response.routes.length;j++) {
+            for (let i = 0;i < response.routes[j].legs[0].steps.length;i++) {
+                var polyline = L.Polyline.fromEncoded(response.routes[j].legs[0].steps[i].geometry)
+                console.log(polyline)
+                if (j==0){polyline.setStyle({
+                color: 'red'
+                });
+
+                }else{polyline.setStyle({
+                color: 'grey'
+                });
+                }
+
+                polyline.addTo(map)
+    }
+
+        }
   });
+
+
+
 
 }
 function removeSelected(){

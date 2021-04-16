@@ -102,7 +102,6 @@ def direction(loc_1, loc_2):
 
 
 
-
 @socketio.on("read_data")
 def read_json_data():
     hospitals_clinics_res = requests.get("https://data.calgary.ca/resource/x34e-bcjz.geojson",\
